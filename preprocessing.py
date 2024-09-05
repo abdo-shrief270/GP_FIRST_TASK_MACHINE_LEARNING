@@ -1,6 +1,5 @@
 import numpy as np
 import pandas as pd
-import datetime
 
 print("read dataset rows")
 ds=pd.read_excel("/home/abdosh/Desktop/GP_FIRST_TASK_MACHINE_LEARNING/dataset.xlsx",na_filter=False)
@@ -13,7 +12,7 @@ ds_h = []
 print("remove all cells that contains names leaving only users id")
 for pr in ds :
 	if not pr[0][0].isalpha() :
-		tmp=[pr[0],pr[1],pr[2]]
+		tmp=[pr[0].split('_')[2],pr[1],pr[2]]
 		ds_h.append(tmp)
 	
 	
@@ -80,7 +79,7 @@ def append_users_events_to_ex_ds(evs,ds):
 
 print('formating user events and sorting it depends on the date')
 for i in range(0,len(dataset_output)):
-	print("Work on user no : "+str(i)+" of " +str(len(dataset_output)))
+	print("Work on user no : "+str(i)+" of " +str(len(dataset_output)) + " Having Id = " + str(dataset_output[i][0][0]))
 	u_events=dataset_output[i]
 	u_events=process_on_users_events(u_events)
 	if len(u_events) > 30 :	
@@ -91,11 +90,5 @@ for i in range(0,len(dataset_output)):
 		
 ds_c_mfu.to_excel(ds_mfu, index=False)
 ds_c_nor.to_excel(ds_nor, index=False)
-
-
-
-
-
-
 
 
