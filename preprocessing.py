@@ -1,8 +1,8 @@
 import numpy as np
 import pandas as pd
 
-print("read dataset rows")
-ds=pd.read_excel("/home/abdosh/Desktop/GP_FIRST_TASK_MACHINE_LEARNING/dataset.xlsx",na_filter=False)
+print("Reading dataset rows")
+ds=pd.read_csv("dataset.csv", na_filter=False)
 
 ds=ds.to_numpy()
 
@@ -41,8 +41,8 @@ for row in ds_h :
 print("sorting users array depends on user's event_ts")
 
 
-ds_mfu = 'dataset_output_mfu.xlsx'
-ds_nor = 'dataset_output_nor.xlsx'
+ds_mfu = 'dataset_output_mfu.csv'
+ds_nor = 'dataset_output_nor.csv'
 
 def process_on_users_events(u_e_s):
 	us_ev_sort_h=[]
@@ -64,31 +64,31 @@ def process_on_users_events(u_e_s):
 	us_ev_sort_h.sort(key=lambda x:x['date'])
 	return us_ev_sort_h	
 
-ds_x_mfu = pd.read_excel(ds_mfu)
-ds_x_nor = pd.read_excel(ds_nor)
-ds_c_mfu = ds_x_mfu
-ds_c_nor = ds_x_nor
+ds_x_mfu = []
+ds_x_nor = []
 
-
-def append_users_events_to_ex_ds(evs,ds):
-	for ev in evs :
-		ds = pd.concat([ds, pd.DataFrame([ev])], ignore_index=True)
-	
-	return ds
 
 
 print('formating user events and sorting it depends on the date')
 for i in range(0,len(dataset_output)):
-	print("Work on user no : "+str(i)+" of " +str(len(dataset_output)) + " Having Id = " + str(dataset_output[i][0][0]))
+	print("\rWork on user no : "+str(i)+" of " +str(len(dataset_output)) + " Having Id = " + str(dataset_output[i][0][0]),end='',flush=True)
 	u_events=dataset_output[i]
 	u_events=process_on_users_events(u_events)
 	if len(u_events) > 30 :	
-		ds_c_mfu = append_users_events_to_ex_ds(u_events,ds_c_mfu)
+		for i in range(0,len(u_events)):
+			ds_x_mfu.append(u_events[i])
+			ds_x_nor.append(u_events[i])
 	else :
-		ds_c_nor = append_users_events_to_ex_ds(u_events,ds_c_nor)
+		for i in range(0,len(u_events)):
+			ds_x_nor.append(u_events[i])
+
+
+print('\nconverting arrays into DataFrames')
+ds_x_mfu=pd.DataFrame(ds_x_mfu)
+ds_x_nor=pd.DataFrame(ds_x_nor)	
 	
-		
-ds_c_mfu.to_excel(ds_mfu, index=False)
-ds_c_nor.to_excel(ds_nor, index=False)
+print('saving DataFrames Into CSV Files')
+ds_x_mfu.to_csv(ds_mfu, index=False)
+ds_x_nor.to_csv(ds_nor, index=False)
 
 
